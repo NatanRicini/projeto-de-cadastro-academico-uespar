@@ -311,6 +311,7 @@ public class UsuarioView extends javax.swing.JInternalFrame {
 
     private void jbtSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtSalvarActionPerformed
         // TODO add your handling code here:
+         if (!(this.controller.getUsuarioManipulado()==null)) {
         enviarForm();
         try {
            this.controller.salvar();
@@ -318,9 +319,13 @@ public class UsuarioView extends javax.swing.JInternalFrame {
            JOptionPane.showMessageDialog(this, "Salvo com sucesso!!");
            
         } catch (Exception e) {  
-             JOptionPane.showMessageDialog(this, "Erro ao Salvar!!" +e.getMessage());
+             JOptionPane.showMessageDialog(this, "Erro ao Salvar!!" +e.getMessage(),"Erro",JOptionPane.ERROR_MESSAGE);
             
         }
+         } else {
+               JOptionPane.showMessageDialog(this, "Não há nada para salvar!!","Alerta",JOptionPane.WARNING_MESSAGE);
+         }
+         
         
     }//GEN-LAST:event_jbtSalvarActionPerformed
 
@@ -338,8 +343,8 @@ public class UsuarioView extends javax.swing.JInternalFrame {
            
            
         } else {
-            JOptionPane.showMessageDialog(this, "não há nada para excluir!");
-            
+            JOptionPane.showMessageDialog(this, "não há nada para excluir!","Alerta",JOptionPane.WARNING_MESSAGE);
+      
             
         }
     }//GEN-LAST:event_jbtExcluirActionPerformed
@@ -398,7 +403,7 @@ public class UsuarioView extends javax.swing.JInternalFrame {
 
     private void desabilitarCampos() {
                jtfNome.setEnabled(false);
-       jtfLogin.setEditable(false);
+       jtfLogin.setEnabled(false);
        jcbTipo.setEnabled(false);
        jckAtivo.setEnabled(false);
        jpwSenha.setEnabled(false);
