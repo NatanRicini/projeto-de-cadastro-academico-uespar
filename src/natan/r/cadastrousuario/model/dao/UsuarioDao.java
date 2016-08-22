@@ -65,17 +65,18 @@ public class UsuarioDao {
        } else {
            /// UPDATE
            sql.append("update usuario set");
-           sql.append("nome = ?, senha = ?, `status` = ?,");
+           
+           sql.append(" nome = ?, senha = ?, login = ?, `status` = ?,");
            sql.append(" tipo = ? ");
            sql.append(" where codigo = ?");
             try {
              PreparedStatement stm = this.conn.prepareStatement(sql.toString());
-             stm.setString(0, nome);
-             stm.setInt(5, codigo );
-             stm.setString(1, login);
+             stm.setString(1, nome);
+             stm.setInt(6, codigo );
+             stm.setString(3, login);
              stm.setString(2, senha);
-             stm.setInt(3, status);
-             stm.setInt(4, tipo);
+             stm.setInt(4, status);
+             stm.setInt(5, tipo);
              stm.execute();
              return true;
              
@@ -91,7 +92,7 @@ public class UsuarioDao {
       sql.append("delete from usuario where codigo = ?");
         try {
             PreparedStatement stm = this.conn.prepareStatement(sql.toString());
-            stm.setInt(0, codigo);
+            stm.setInt(1, codigo);
             stm.execute();
             return true;
         } catch (SQLException e) {

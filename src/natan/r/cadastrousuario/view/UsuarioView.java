@@ -5,9 +5,11 @@
  */
 package natan.r.cadastrousuario.view;
 
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import natan.r.cadastrousuario.controller.UsuarioController;
+import natan.r.cadastrousuario.model.domain.Usuario;
 
 /**
  *
@@ -135,6 +137,12 @@ public class UsuarioView extends javax.swing.JInternalFrame {
         jPanel2.setEnabled(false);
 
         jLabel1.setText("Código");
+
+        jtfCodigo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jtfCodigoFocusLost(evt);
+            }
+        });
 
         jLabel2.setText("Nome");
 
@@ -265,16 +273,18 @@ public class UsuarioView extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 597, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 597, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -285,8 +295,8 @@ public class UsuarioView extends javax.swing.JInternalFrame {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         pack();
@@ -353,6 +363,7 @@ public class UsuarioView extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         this.controller.pesquisar();
         DefaultTableModel model = (DefaultTableModel)jtbLista.getModel();
+        model.setRowCount(0);
         for (int i = 0; i < this.controller.getLista().size(); i++) {
             model.addRow(new Object[]{
                this.controller.getLista().get(i).getCodigo().toString(),
@@ -361,6 +372,41 @@ public class UsuarioView extends javax.swing.JInternalFrame {
             });
         }
     }//GEN-LAST:event_jbtListarActionPerformed
+
+    private void jtfCodigoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtfCodigoFocusLost
+        // TODO add your handling code here:
+        if (!jtfCodigo.getText().equals("")){
+        try {    
+        
+      
+            int parseInt = Integer.parseInt(jtfCodigo.getText()); 
+            this.controller.pesquisar();
+            List<Usuario> lista = this.controller.getLista();
+            if (lista.size() >0) {
+                for (int i =0; i < lista.size(); i++) {
+                   if (lista.get(i).getCodigo().equals(parseInt) ) {
+                    this.controller.setUsuarioManipulado(lista.get(i));
+                    this.recebeForm();
+                    this.habilitarCampos();
+                    break;
+                }
+                } 
+                
+             
+            }else{
+                JOptionPane.showMessageDialog(this, "Não ha nada a listar!");
+                
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Número inválido!");
+            jtfCodigo.requestFocus();
+            
+        }    
+        
+        }
+        
+    }//GEN-LAST:event_jtfCodigoFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -453,6 +499,23 @@ public class UsuarioView extends javax.swing.JInternalFrame {
      
       
   }  
+
+    private void recebeForm() {
+     jtfCodigo.setText(this.controller.getUsuarioManipulado().getCodigo().toString());
+     jtfNome.setText(this.controller.getUsuarioManipulado().getNome());
+     jtfLogin.setText(this.controller.getUsuarioManipulado().getLogin());
+     jcbTipo.setSelectedIndex(this.controller.getUsuarioManipulado().getTipo());
+     if (this.controller.getUsuarioManipulado().getStatus()==1) {
+         
+         jckAtivo.setSelected(true);
+     }else{
+               jckAtivo.setSelected(false);
+               
+     }
+     jpwSenha.setText(this.controller.getUsuarioManipulado().getSenha());
+     jpwConfirmacao.setText(this.controller.getUsuarioManipulado().getSenha());
+     
+    }
     
     
 }

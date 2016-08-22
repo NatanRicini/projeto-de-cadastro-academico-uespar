@@ -20,8 +20,8 @@ public class UsuarioController {
     private Usuario usuarioManipulado;
     private List<Usuario> lista;
     public void pesquisar() {
-      dao.listar();
-      this.lista = dao.listar();
+
+      this.lista = this.dao.listar();
       
         
     }
