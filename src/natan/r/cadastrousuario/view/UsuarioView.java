@@ -6,6 +6,8 @@
 package natan.r.cadastrousuario.view;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import natan.r.cadastrousuario.controller.UsuarioController;
@@ -16,8 +18,8 @@ import natan.r.cadastrousuario.model.domain.Usuario;
  * @author Natan
  */
 public class UsuarioView extends javax.swing.JInternalFrame {
+
     private UsuarioController controller;
-    
 
     /**
      * Creates new form UsuarioView
@@ -151,6 +153,11 @@ public class UsuarioView extends javax.swing.JInternalFrame {
         jLabel4.setText("Tipo");
 
         jtfNome.setEnabled(false);
+        jtfNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtfNomeActionPerformed(evt);
+            }
+        });
 
         jtfLogin.setEnabled(false);
 
@@ -305,6 +312,7 @@ public class UsuarioView extends javax.swing.JInternalFrame {
     private void jbtNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtNovoActionPerformed
         // TODO add your handling code here:
         habilitarCampos();
+        this.limparCampos();
         this.controller.novo();
     }//GEN-LAST:event_jbtNovoActionPerformed
 
@@ -315,98 +323,107 @@ public class UsuarioView extends javax.swing.JInternalFrame {
     private void jbtCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtCancelarActionPerformed
         // TODO add your handling code here:
         desabilitarCampos();
+        this.limparCampos();
         this.controller.setUsuarioManipulado(null);
-        
+
     }//GEN-LAST:event_jbtCancelarActionPerformed
 
     private void jbtSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtSalvarActionPerformed
         // TODO add your handling code here:
-         if (!(this.controller.getUsuarioManipulado()==null)) {
-        enviarForm();
-        try {
-           this.controller.salvar();
-           this.limparCampos();
-           JOptionPane.showMessageDialog(this, "Salvo com sucesso!!");
-           
-        } catch (Exception e) {  
-             JOptionPane.showMessageDialog(this, "Erro ao Salvar!!" +e.getMessage(),"Erro",JOptionPane.ERROR_MESSAGE);
+        if (!(this.controller.getUsuarioManipulado() == null)) {
             
+            try {
+                this.validarForm();
+                enviarForm();
+                this.controller.salvar();
+                this.limparCampos();
+                this.desabilitarCampos();
+                this.jbtListarActionPerformed(evt);
+                JOptionPane.showMessageDialog(this, "Salvo com sucesso!!");
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Erro ao Salvar!!" + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Não há nada para salvar!!", "Alerta", JOptionPane.WARNING_MESSAGE);
         }
-         } else {
-               JOptionPane.showMessageDialog(this, "Não há nada para salvar!!","Alerta",JOptionPane.WARNING_MESSAGE);
-         }
-         
-        
+
+
     }//GEN-LAST:event_jbtSalvarActionPerformed
 
     private void jbtExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtExcluirActionPerformed
         // TODO add your handling code here:
-        if (!(this.controller.getUsuarioManipulado()==null)) {
+        if ((!(this.controller.getUsuarioManipulado() == null))
+                && (this.controller.getUsuarioManipulado().getCodigo() != null)) {
+
             if (JOptionPane.showConfirmDialog(null,
-              "Deseja Realmente Remover este registro?",
-              "Excluir registro",
-              JOptionPane.YES_NO_OPTION)
-              == JOptionPane.YES_OPTION) {
-      this.controller.excluir();  
-    }
-             
-           
-           
-        } else {
-            JOptionPane.showMessageDialog(this, "não há nada para excluir!","Alerta",JOptionPane.WARNING_MESSAGE);
-      
-            
+                    "Deseja Realmente Remover este registro?",
+                    "Excluir registro",
+                    JOptionPane.YES_NO_OPTION)
+                    == JOptionPane.YES_OPTION) {
+                this.controller.excluir();
+                this.limparCampos();
+                this.desabilitarCampos();
+                this.jbtListarActionPerformed(evt);
+
+            } else {
+                JOptionPane.showMessageDialog(this, "não há nada para excluir!", "Alerta", JOptionPane.WARNING_MESSAGE);
+
+            }
         }
     }//GEN-LAST:event_jbtExcluirActionPerformed
 
     private void jbtListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtListarActionPerformed
         // TODO add your handling code here:
         this.controller.pesquisar();
-        DefaultTableModel model = (DefaultTableModel)jtbLista.getModel();
+        DefaultTableModel model = (DefaultTableModel) jtbLista.getModel();
         model.setRowCount(0);
         for (int i = 0; i < this.controller.getLista().size(); i++) {
             model.addRow(new Object[]{
-               this.controller.getLista().get(i).getCodigo().toString(),
-               this.controller.getLista().get(i).getNome()
-                
+                this.controller.getLista().get(i).getCodigo().toString(),
+                this.controller.getLista().get(i).getNome()
+
             });
         }
     }//GEN-LAST:event_jbtListarActionPerformed
 
     private void jtfCodigoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtfCodigoFocusLost
         // TODO add your handling code here:
-        if (!jtfCodigo.getText().equals("")){
-        try {    
-        
-      
-            int parseInt = Integer.parseInt(jtfCodigo.getText()); 
-            this.controller.pesquisar();
-            List<Usuario> lista = this.controller.getLista();
-            if (lista.size() >0) {
-                for (int i =0; i < lista.size(); i++) {
-                   if (lista.get(i).getCodigo().equals(parseInt) ) {
-                    this.controller.setUsuarioManipulado(lista.get(i));
-                    this.recebeForm();
-                    this.habilitarCampos();
-                    break;
+        if (!jtfCodigo.getText().equals("")) {
+            try {
+
+                int parseInt = Integer.parseInt(jtfCodigo.getText());
+                this.controller.pesquisar();
+                List<Usuario> lista = this.controller.getLista();
+                if (lista.size() > 0) {
+                    for (int i = 0; i < lista.size(); i++) {
+                        if (lista.get(i).getCodigo().equals(parseInt)) {
+                            this.controller.setUsuarioManipulado(lista.get(i));
+                            this.recebeForm();
+                            this.habilitarCampos();
+                            break;
+                        }
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Não ha nada a listar!");
+
                 }
-                } 
-                
-             
-            }else{
-                JOptionPane.showMessageDialog(this, "Não ha nada a listar!");
-                
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Número inválido!");
+                jtfCodigo.requestFocus();
+
             }
-            
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Número inválido!");
-            jtfCodigo.requestFocus();
-            
-        }    
-        
+
         }
-        
+
     }//GEN-LAST:event_jtfCodigoFocusLost
+
+    private void jtfNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfNomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtfNomeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -437,85 +454,99 @@ public class UsuarioView extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
 
     private void habilitarCampos() {
-       jtfNome.setEnabled(true);
-       jtfLogin.setEnabled(true);
-       jcbTipo.setEnabled(true);
-       jckAtivo.setEnabled(true);
-       jpwSenha.setEnabled(true);
-       jpwConfirmacao.setEnabled(true);
-       jtfCodigo.setEditable(false);
-       
+        jtfNome.setEnabled(true);
+        jtfLogin.setEnabled(true);
+        jcbTipo.setEnabled(true);
+        jckAtivo.setEnabled(true);
+        jpwSenha.setEnabled(true);
+        jpwConfirmacao.setEnabled(true);
+        jtfCodigo.setEditable(false);
+
     }
 
     private void desabilitarCampos() {
-               jtfNome.setEnabled(false);
-       jtfLogin.setEnabled(false);
-       jcbTipo.setEnabled(false);
-       jckAtivo.setEnabled(false);
-       jpwSenha.setEnabled(false);
-       jpwConfirmacao.setEnabled(false);
-       jtfCodigo.setEditable(true);
-       
+        jtfNome.setEnabled(false);
+        jtfLogin.setEnabled(false);
+        jcbTipo.setEnabled(false);
+        jckAtivo.setEnabled(false);
+        jpwSenha.setEnabled(false);
+        jpwConfirmacao.setEnabled(false);
+        jtfCodigo.setEditable(true);
+
     }
 
     private void enviarForm() {
         if (this.jtfCodigo.getText().equals("")) {
-           this.controller.getUsuarioManipulado().setCodigo(null);
-    }else{  
-            
-    
-        this.controller.getUsuarioManipulado()
-         .setCodigo(Integer.parseInt(this.jtfCodigo.getText()));
+            this.controller.getUsuarioManipulado().setCodigo(null);
+        } else {
+
+            this.controller.getUsuarioManipulado()
+                    .setCodigo(Integer.parseInt(this.jtfCodigo.getText()));
         }
         this.controller.getUsuarioManipulado()
-        .setNome(this.jtfNome.getText());
+                .setNome(this.jtfNome.getText());
         this.controller.getUsuarioManipulado()
-        .setLogin(this.jtfLogin.getText());
+                .setLogin(this.jtfLogin.getText());
         this.controller.getUsuarioManipulado()
-        .setSenha(this.jpwSenha.getPassword().toString());
-        
+                .setSenha( new String (this.jpwSenha.getPassword() ) );
+
         this.controller.getUsuarioManipulado()
-        .setTipo(jcbTipo.getSelectedIndex());
-        
-        if(jckAtivo.isSelected()) {
-          this.controller.getUsuarioManipulado().setStatus(1);
-        } else {        
-          this.controller.getUsuarioManipulado().setStatus(0);
-        
+                .setTipo(jcbTipo.getSelectedIndex());
+
+        if (jckAtivo.isSelected()) {
+            this.controller.getUsuarioManipulado().setStatus(1);
+        } else {
+            this.controller.getUsuarioManipulado().setStatus(0);
+
+        }
     }
-  }
-    
-  private void limparCampos() {
-     jtfLogin.setText("");
-     jtfNome.setText("");
-     jtfCodigo.setText("");
-     jcbTipo.setSelectedIndex(0);
-     jckAtivo.setSelected(false);
-     jpwConfirmacao.setText("");
-     jpwSenha.setText("");
-     
-     
-     
-     
-      
-  }  
+
+    private void limparCampos() {
+        jtfLogin.setText("");
+        jtfNome.setText("");
+        jtfCodigo.setText("");
+        jcbTipo.setSelectedIndex(0);
+        jckAtivo.setSelected(false);
+        jpwConfirmacao.setText("");
+        jpwSenha.setText("");
+
+    }
 
     private void recebeForm() {
-     jtfCodigo.setText(this.controller.getUsuarioManipulado().getCodigo().toString());
-     jtfNome.setText(this.controller.getUsuarioManipulado().getNome());
-     jtfLogin.setText(this.controller.getUsuarioManipulado().getLogin());
-     jcbTipo.setSelectedIndex(this.controller.getUsuarioManipulado().getTipo());
-     if (this.controller.getUsuarioManipulado().getStatus()==1) {
-         
-         jckAtivo.setSelected(true);
-     }else{
-               jckAtivo.setSelected(false);
-               
-     }
-     jpwSenha.setText(this.controller.getUsuarioManipulado().getSenha());
-     jpwConfirmacao.setText(this.controller.getUsuarioManipulado().getSenha());
-     
+        jtfCodigo.setText(this.controller.getUsuarioManipulado().getCodigo().toString());
+        jtfNome.setText(this.controller.getUsuarioManipulado().getNome());
+        jtfLogin.setText(this.controller.getUsuarioManipulado().getLogin());
+        jcbTipo.setSelectedIndex(this.controller.getUsuarioManipulado().getTipo());
+        if (this.controller.getUsuarioManipulado().getStatus() == 1) {
+
+            jckAtivo.setSelected(true);
+        } else {
+            jckAtivo.setSelected(false);
+
+        }
+        jpwSenha.setText(this.controller.getUsuarioManipulado().getSenha());
+        jpwConfirmacao.setText(this.controller.getUsuarioManipulado().getSenha());
+
     }
+
+    private void validarForm() throws Exception {
+        if (new String(jpwSenha.getPassword()).equals("")) {
+            throw new Exception("A senha não pode ser vazia!");
+        }
+        if (!new String(jpwSenha.getPassword())
+                .equals(new String(jpwConfirmacao.getPassword()))) {
+            throw new Exception("A senha é diferente da Confirmação !!");
+
+        }
+     if ( jtfNome.getText().equals("")) {
+         throw new Exception ("O campo nome não pode ser vazio!!!");
+    }
+    if (jtfLogin.getText().equals("")) {
+        throw new Exception ("o campo login não pode ser vazio!!!!");
+    }
+    if (jcbTipo.getSelectedIndex()==0) {
     
-    
+       throw new Exception ("È necessário escolher ao menos um tipo!");    
+    }
+}
 }
