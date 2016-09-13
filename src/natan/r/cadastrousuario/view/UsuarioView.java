@@ -66,8 +66,11 @@ public class UsuarioView extends javax.swing.JInternalFrame {
         setClosable(true);
         setTitle("Cadastro de Usuário");
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Controles"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Controles", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 18), new java.awt.Color(255, 255, 102))); // NOI18N
 
+        jbtNovo.setBackground(new java.awt.Color(0, 9, 248));
+        jbtNovo.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jbtNovo.setForeground(new java.awt.Color(0, 51, 153));
         jbtNovo.setText("Novo usuário");
         jbtNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -75,6 +78,8 @@ public class UsuarioView extends javax.swing.JInternalFrame {
             }
         });
 
+        jbtSalvar.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jbtSalvar.setForeground(new java.awt.Color(0, 51, 153));
         jbtSalvar.setText("Salvar");
         jbtSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -82,6 +87,8 @@ public class UsuarioView extends javax.swing.JInternalFrame {
             }
         });
 
+        jbtCancelar.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jbtCancelar.setForeground(new java.awt.Color(0, 51, 153));
         jbtCancelar.setText("Cancelar");
         jbtCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -89,6 +96,8 @@ public class UsuarioView extends javax.swing.JInternalFrame {
             }
         });
 
+        jbtExcluir.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jbtExcluir.setForeground(new java.awt.Color(0, 51, 153));
         jbtExcluir.setText("Excluir");
         jbtExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,6 +105,8 @@ public class UsuarioView extends javax.swing.JInternalFrame {
             }
         });
 
+        jbtListar.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jbtListar.setForeground(new java.awt.Color(0, 51, 153));
         jbtListar.setText("Listar");
         jbtListar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,6 +154,11 @@ public class UsuarioView extends javax.swing.JInternalFrame {
         jtfCodigo.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jtfCodigoFocusLost(evt);
+            }
+        });
+        jtfCodigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtfCodigoActionPerformed(evt);
             }
         });
 
@@ -286,12 +302,12 @@ public class UsuarioView extends javax.swing.JInternalFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 597, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 597, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -303,7 +319,7 @@ public class UsuarioView extends javax.swing.JInternalFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();
@@ -424,6 +440,10 @@ public class UsuarioView extends javax.swing.JInternalFrame {
     private void jtfNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfNomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jtfNomeActionPerformed
+
+    private void jtfCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfCodigoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtfCodigoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
